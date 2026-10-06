@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #05070a;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .container {
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 45px;
+      letter-spacing: 5px;
+      margin-bottom: 10px;
+    }
+
+    #status {
+      color: #00d9ff;
+      margin: 25px;
+      font-size: 18px;
+    }
+
+    button {
+      background: #111820;
+      color: #00d9ff;
+      border: 2px solid #00d9ff;
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>JARVIS</h1>
+
+  <p>Personal AI Assistant</p>
+
+  <div id="status">System ready</div>
+
+  <button onclick="listen()">🎙️<br>LISTEN</button>
+
+</div>
+
+<script>
+
+const statusText = document.getElementById("status");
+
+function speak(text) {
+  statusText.innerText = "JARVIS: " + text;
+
+  const voice = new SpeechSynthesisUtterance(text);
+  voice.lang = "en-US";
+  voice.rate = 1;
+  speechSynthesis.speak(voice);
+}
+
+function listen() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    speak("Sorry, your browser does not support voice recognition.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  statusText.innerText = "🎙️ Listening...";
+
+  recognition.start();
+
+  recognition.onresult = function(event) {
+
+    const command =
+      event.results[0][0].transcript.toLowerCase();
+
+    statusText.innerText = "You: " + command;
+
+    handleCommand(command);
+  };
+
+  recognition.onerror = function() {
+    speak("I couldn't hear you.");
+  };
+}
+
+function handleCommand(command) {
+
+  if (command.includes("hello") ||
+      command.includes("hi")) {
+
+    speak("Hello. I am JARVIS. Systems are ready.");
+  }
+
+  else if (command.includes("youtube")) {
+
+    speak("Opening YouTube.");
+
+    window.open(
+      "https://www.youtube.com",
+      "_blank"
+    );
+  }
+
+  else if (command.includes("google")) {
+
+    speak("Opening Google.");
+
+    window.open(
+      "https://www.google.com",
+      "_blank"
+    );
+  }
+
+  else if (command.includes("instagram")) {
+
+    speak("Opening Instagram.");
+
+    window.open(
+      "https://www.instagram.com",
+      "_blank"
+    );
+  }
+
+  else if (command.includes("time")) {
+
+    const now = new Date();
+
+    const time = now.toLocaleTimeString(
+      [],
+      {
+        hour: "numeric",
+        minute: "2-digit"
+      }
+    );
+
+    speak("The time is " + time);
+  }
+
+  else if (command.includes("who are you")) {
+
+    speak("I am JARVIS, your personal assistant.");
+  }
+
+  else {
+
+    speak(
+      "I don't know that command yet. We will teach me more."
+    );
+  }
+}
+
+</script>
+
+</body>
+</html>
